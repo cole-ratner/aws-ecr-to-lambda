@@ -1,12 +1,14 @@
-FROM docker:19.03.4
+FROM python:3.8-slim-buster
 
-RUN apk update \
-  && apk upgrade \
-  && apk add --no-cache --update python3 python py-pip coreutils \
-  && rm -rf /var/cache/apk/* \
+COPY ./requirements.txt .
+
+RUN apt update \
+  && apt upgrade \
+  && apt add --no-cache --update python3 python py-pip coreutils \
+  && rm -rf /var/cache/apt/* \
   && pip install awscli \
   && pip install -r requirements.txt \
-  && apk --purge -v del py-pip
+  && apt --purge -v del py-pip
 
 ADD run.py /run.py
 ADD entrypoint.sh /entrypoint.sh
