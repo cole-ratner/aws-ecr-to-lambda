@@ -1,0 +1,28 @@
+name: AWS ECR to Lambda
+author: Cole Ratner <kolratner@gmail.com>
+description: Deploy Docker images from an ECR repository to a Lambda.
+inputs:
+  access_key_id:
+    description: The AWS access key id
+    required: false
+  secret_access_key:
+    description: The AWS secret access key
+    required: false
+  aws_account_id:
+    description: AWS Account ID
+    required: true
+  image_uri:
+    description: A valid ECR image URI
+    required: true
+  region:
+    description: The AWS region
+    required: false
+  role_name:
+    description: The name of the Role your Lambda function will assume
+    required: true
+  function_name:
+    description: The name of the Lambda Function you are creating or updating
+    required: true
+runs:
+  using: docker
+  image: Dockerfile
