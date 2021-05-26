@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e
 
-python3 -u /run.py $@
+python3 -u /home/action/run.py $@
