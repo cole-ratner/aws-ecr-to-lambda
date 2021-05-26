@@ -8,7 +8,6 @@ COPY entrypoint.sh /home/action
 
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
-RUN apt update && apt upgrade
 RUN pip3 install --upgrade pip && \
     pip3 install -r requirements.txt
 
