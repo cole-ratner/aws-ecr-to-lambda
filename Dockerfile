@@ -12,4 +12,4 @@ RUN pip3 install --upgrade pip && \
     pip3 install -r requirements.txt
 
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/home/action/entrypoint.sh"]
