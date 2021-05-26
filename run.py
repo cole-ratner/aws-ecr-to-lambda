@@ -3,7 +3,8 @@ import shlex
 import subprocess
 import os
 
-client = boto3.client('lambda')
+def new_client(resource, region):
+    return boto3.client(resource, region)
 
 def sanitize(key_name):
     v = os.environ.get(f"INPUT_{key_name}")
@@ -26,14 +27,14 @@ def ecr_login(region):
     cmd = shlex.split(login_command.decode('utf-8').strip())
     print(cmd)
 
-def check_lambda_exists(function_name):
+def check_lambda_exists(client, function_name):
     try:
         if client.get_function(FunctionName=function_name):
             return True
     except client.exceptions.ResourceNotFoundException:
         return False
 
-def create_function(aws_account_id, function_name, role_name, image_uri):
+def create_function(client, aws_account_id, function_name, role_name, image_uri):
     print("NOW CREATING A LAMBDA FUNCTION")
     try:
         response = client.create_function(
@@ -55,13 +56,16 @@ def main():
     aws_account_id = sanitize("AWS_ACCOUNT_ID")
     #access_key_id = sanitize("ACCESS_KEY_ID")
     #secret_access_key = sanitize("SECRET_ACCESS_KEY")
-    #region = sanitize("REGION")
+    region = sanitize("REGION")
     function_name = sanitize("FUNCTION_NAME")
     role_name = sanitize("ROLE_NAME")
     image_uri = sanitize("IMAGE_URI")
 
-    if not check_lambda_exists(function_name):
+    lambda_client = new_client('lambda', region)
+
+    if not check_lambda_exists(lambda_client, function_name):
         create_function(
+            lambda_client,
             aws_account_id, 
             function_name, 
             role_name, 
