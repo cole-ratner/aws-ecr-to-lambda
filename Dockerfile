@@ -1,13 +1,16 @@
 FROM python:3.8-slim-buster
 
-COPY requirements.txt .
+WORKDIR /home/action
 
-RUN apt update && apt upgrade
-RUN pip install -r requirements.txt
-
-ADD run.py /run.py
-ADD entrypoint.sh /entrypoint.sh
+COPY requirements.txt /home/action
+COPY run.py /home/action
+COPY entrypoint.sh /home/action
 
 RUN ["chmod", "+x", "/entrypoint.sh"]
+
+RUN apt update && apt upgrade
+RUN pip3 install --upgrade pip && \
+    pip3 install -r requirements.txt
+
 
 ENTRYPOINT ["/entrypoint.sh"]
