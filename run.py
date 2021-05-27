@@ -76,7 +76,7 @@ def main():
         )
     else:
         update_function(
-            lambda_client
+            lambda_client,
             function_name,
             image_uri,
         )
