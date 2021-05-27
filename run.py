@@ -17,16 +17,6 @@ def set_aws_env(key_id, key_secret, region):
     os.environ['AWS_SECRET_ACCESS_KEY'] = key_secret
     os.environ['AWS_DEFAULT_REGION'] = region
 
-def ecr_login(region):
-    get_login = subprocess.Popen(['aws', 'ecr', 'get-login', '--no-include-email', '--region', region], 
-           stdout=subprocess.PIPE, 
-           stderr=subprocess.STDOUT)
-    login_command, stderr = get_login.communicate()
-    if stderr:
-        print(stderr.decode('utf-8'))
-    cmd = shlex.split(login_command.decode('utf-8').strip())
-    print(cmd)
-
 def check_lambda_exists(client, function_name):
     try:
         if client.get_function(FunctionName=function_name):
@@ -65,13 +55,13 @@ def main():
     lambda_client = new_client('lambda')
 
     if not check_lambda_exists(lambda_client, function_name):
-        create_function(
+        print(create_function(
             lambda_client,
             aws_account_id, 
             function_name, 
             role_name, 
             image_uri     
-        )
+        ))
     else:
         update_function()
 
