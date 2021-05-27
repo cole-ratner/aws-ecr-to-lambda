@@ -4,7 +4,7 @@ import subprocess
 import os
 
 def new_client(resource, region):
-    return boto3.client(resource, region)
+    return boto3.client(resource)
 
 def sanitize(key_name):
     v = os.environ.get(f"INPUT_{key_name}")
@@ -12,7 +12,7 @@ def sanitize(key_name):
         raise Exception(f"Unable to find the {key_name}. Did you set {key_name}?")
     return v
 
-def aws_configure(key_id, key_secret, region):
+def set_aws_env(key_id, key_secret, region):
     os.environ['AWS_ACCESS_KEY_ID'] = key_id
     os.environ['AWS_SECRET_ACCESS_KEY'] = key_secret
     os.environ['AWS_DEFAULT_REGION'] = region
@@ -54,14 +54,15 @@ def update_function():
 
 def main():
     aws_account_id = sanitize("AWS_ACCOUNT_ID")
-    #access_key_id = sanitize("ACCESS_KEY_ID")
-    #secret_access_key = sanitize("SECRET_ACCESS_KEY")
+    access_key_id = sanitize("ACCESS_KEY_ID")
+    secret_access_key = sanitize("SECRET_ACCESS_KEY")
     region = sanitize("REGION")
     function_name = sanitize("FUNCTION_NAME")
     role_name = sanitize("ROLE_NAME")
     image_uri = sanitize("IMAGE_URI")
 
-    lambda_client = new_client('lambda', region)
+    set_aws_env(access_key_id, secret_access_key, region)
+    lambda_client = new_client('lambda')
 
     if not check_lambda_exists(lambda_client, function_name):
         create_function(
