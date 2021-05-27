@@ -1,6 +1,4 @@
 import boto3
-import shlex
-import subprocess
 import os
 
 def new_client(resource):
@@ -35,9 +33,11 @@ def create_function(client, aws_account_id, function_name, role_name, image_uri)
                 'ImageUri': image_uri,
             },
         )
+        print("FINISHED SUCCESSFULLY CREATING A LAMBDA FUNCTION")
         return response
     except Exception as e:
-        return e
+        print(e)
+        exit(1)
 
 def update_function():
     print("updating function code")
