@@ -3,7 +3,7 @@ import shlex
 import subprocess
 import os
 
-def new_client(resource, region):
+def new_client(resource):
     return boto3.client(resource)
 
 def sanitize(key_name):
