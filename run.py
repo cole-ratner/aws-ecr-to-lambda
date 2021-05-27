@@ -40,7 +40,7 @@ def create_function(client, aws_account_id, function_name, role_name, image_uri)
         print(e)
         exit(1)
 
-def update_function(func_name, image_uri):
+def update_function(client, func_name, image_uri):
     print("NOW UPDATING LAMBDA FUNCTION CODE")
     try: 
         response = client.update_function_code(
@@ -76,6 +76,7 @@ def main():
         )
     else:
         update_function(
+            lambda_client
             function_name,
             image_uri,
         )
