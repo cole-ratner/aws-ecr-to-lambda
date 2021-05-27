@@ -34,13 +34,25 @@ def create_function(client, aws_account_id, function_name, role_name, image_uri)
             },
         )
         print("FINISHED SUCCESSFULLY CREATING A LAMBDA FUNCTION")
-        return response
+        print(response)
+        return
     except Exception as e:
         print(e)
         exit(1)
 
-def update_function():
-    print("updating function code")
+def update_function(func_name, image_uri):
+    print("NOW UPDATING LAMBDA FUNCTION CODE")
+    try: 
+        response = client.update_function_code(
+            FunctionName=func_name,
+            ImageUri=image_uri,
+        )
+        print(response)
+        print("FINISHED SUCCESSFULLY UPDATING LAMBDA FUNCTION CODE")
+        return
+    except Exception as e:
+        print(e)
+        exit(1)
 
 def main():
     aws_account_id = sanitize("AWS_ACCOUNT_ID")
@@ -55,15 +67,17 @@ def main():
     lambda_client = new_client('lambda')
 
     if not check_lambda_exists(lambda_client, function_name):
-        print(create_function(
+        create_function(
             lambda_client,
             aws_account_id, 
             function_name, 
             role_name, 
             image_uri     
-        ))
+        )
     else:
-        update_function()
-
+        update_function(
+            function_name,
+            image_uri,
+        )
 
 main()
